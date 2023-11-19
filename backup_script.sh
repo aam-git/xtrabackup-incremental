@@ -27,12 +27,17 @@ while true; do
         mkdir -p "$ARCHIVE_DIR"
         ARCHIVE_NAME="${ARCHIVE_DIR}/backup_$(date +%Y%m%d).tar.gz"
         echo "Archiving previous backups..."
-        tar -czvf "$ARCHIVE_NAME" "$BASE_DIR" "$INCREMENTAL_DIR"*
+        tar -cvf "$ARCHIVE_NAME" "$BASE_DIR" "$INCREMENTAL_DIR"*
         rm -rf "$BASE_DIR" "$INCREMENTAL_DIR"*
         date +%s > "${BASE_DIR}/last_archive_timestamp"
 
         # Delete archives older than retention period
         find "$ARCHIVE_DIR" -name 'backup_*.tar.gz' -mtime +$(( $(date -d "$BACKUP_RETENTION" +%s) / 86400 )) -exec rm {} \;
+    }
+
+    # Function to count incremental backups
+    count_increments() {
+        find "$INCREMENTAL_DIR" -mindepth 1 -type d | wc -l
     }
 
     # Function to get the base directory for the next incremental backup
@@ -58,7 +63,10 @@ while true; do
         LAST_ARCHIVE_TIME=0
     fi
 
-    if [ $((CURRENT_TIME - LAST_ARCHIVE_TIME)) -ge 86400 ]; then
+    INCREMENT_COUNT=$(count_increments)
+
+    # Check conditions for archiving: time elapsed or too many increments
+    if { [ $((CURRENT_TIME - LAST_ARCHIVE_TIME)) -ge 86400 ] || [ $INCREMENT_COUNT -ge 24 ]; } && { [ -d "$BASE_DIR" ] || [ $INCREMENT_COUNT -gt 0 ]; }; then
         archive_backups
     fi
 
