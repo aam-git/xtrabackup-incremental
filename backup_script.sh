@@ -13,9 +13,9 @@ while true; do
 	ARCHIVE_DIR=${ARCHIVE_DIR}  # Set your archive directory
 	
 	INTERVAL=${INTERVAL:-3600}
-	
 
-	REQUIRED_VARS=("MYSQL_USER" "MYSQL_PASSWORD" "MYSQL_HOST" "BASE_DIR" "INCREMENTAL_DIR" "DATABASES", "ARCHIVE_DIR", "INTERVAL")
+	REQUIRED_VARS=("MYSQL_USER" "MYSQL_PASSWORD" "MYSQL_HOST" "BASE_DIR" "INCREMENTAL_DIR" "DATABASES" "ARCHIVE_DIR"  "INTERVAL")
+
 	for var in "${REQUIRED_VARS[@]}"; do
 		if [ -z "${!var}" ]; then
 			echo "Error: Environment variable $var is not set."
