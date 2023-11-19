@@ -37,13 +37,17 @@ while true; do
 	}
 
 	# Check if it's time to archive (24 hours = 86400 seconds)
-	if [ -f $ARCHIVE_TIMESTAMP_FILE ]; then
-		LAST_ARCHIVE_TIME=$(cat $ARCHIVE_TIMESTAMP_FILE)
-		CURRENT_TIME=$(date +%s)
-		if [ $(($CURRENT_TIME - $LAST_ARCHIVE_TIME)) -ge 86400 ]; then
-			archive_backups
+	if [ -f "$ARCHIVE_TIMESTAMP_FILE" ]; then
+		LAST_ARCHIVE_TIME=$(cat "$ARCHIVE_TIMESTAMP_FILE")
+		if [ -z "$LAST_ARCHIVE_TIME" ]; then
+			LAST_ARCHIVE_TIME=0
 		fi
 	else
+		LAST_ARCHIVE_TIME=0
+	fi
+
+	CURRENT_TIME=$(date +%s)
+	if [ $(($CURRENT_TIME - $LAST_ARCHIVE_TIME)) -ge 86400 ]; then
 		archive_backups
 	fi
 
