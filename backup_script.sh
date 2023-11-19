@@ -36,17 +36,18 @@ while true; do
 		find "$ARCHIVE_DIR" -name 'backup_*.tar.gz' -mtime +$(( $(date -d "$BACKUP_RETENTION" +%s) / 86400 )) -exec rm {} \;
 	}
 
+	CURRENT_TIME=$(date +%s)
+
 	# Check if it's time to archive (24 hours = 86400 seconds)
 	if [ -f "$ARCHIVE_TIMESTAMP_FILE" ]; then
 		LAST_ARCHIVE_TIME=$(cat "$ARCHIVE_TIMESTAMP_FILE")
 		if [ -z "$LAST_ARCHIVE_TIME" ]; then
-			LAST_ARCHIVE_TIME=0
+			LAST_ARCHIVE_TIME="$CURRENT_TIME"
 		fi
 	else
-		LAST_ARCHIVE_TIME=0
+		LAST_ARCHIVE_TIME="$CURRENT_TIME"
 	fi
 
-	CURRENT_TIME=$(date +%s)
 	if [ $(($CURRENT_TIME - $LAST_ARCHIVE_TIME)) -ge 86400 ]; then
 		archive_backups
 	fi
