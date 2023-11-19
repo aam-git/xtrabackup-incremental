@@ -55,12 +55,12 @@ while true; do
 	# Check if base backup needs to be created
 	if [ ! -d "$BASE_DIR" ]; then
 		echo "Creating base backup..."
-		xtrabackup --backup --host=$MYSQL_HOST --user=$MYSQL_USER --password=$MYSQL_PASSWORD --target-dir=$BASE_DIR --databases=$DATABASES
+		xtrabackup --backup --host=$MYSQL_HOST --user=$MYSQL_USER --password=$MYSQL_PASSWORD --target-dir=$BASE_DIR --databases="$DATABASES"
 	else
 		# Create incremental backup
 		NEXT_INC="${INCREMENTAL_DIR}$(date +%Y%m%d%H%M%S)"
 		echo "Creating incremental backup..."
-		xtrabackup --backup --host=$MYSQL_HOST --user=$MYSQL_USER --password=$MYSQL_PASSWORD --target-dir=$NEXT_INC --incremental-basedir=$BASE_DIR --databases=$DATABASES
+		xtrabackup --backup --host=$MYSQL_HOST --user=$MYSQL_USER --password=$MYSQL_PASSWORD --target-dir=$NEXT_INC --incremental-basedir=$BASE_DIR --databases="$DATABASES"
 	fi
 	
     # Wait for 1 hour (3600 seconds) before the next run
