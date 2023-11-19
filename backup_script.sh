@@ -58,7 +58,7 @@ while true; do
 		xtrabackup --backup --host=$MYSQL_HOST --user=$MYSQL_USER --password=$MYSQL_PASSWORD --target-dir=$BASE_DIR --databases="$DATABASES"
 	else
 		# Create incremental backup
-		NEXT_INC="${INCREMENTAL_DIR}$(date +%Y%m%d%H%M%S)"
+		NEXT_INC="$BASE_DIR" "${INCREMENTAL_DIR}$(date +%Y%m%d%H%M%S)"
 		echo "Creating incremental backup..."
 		xtrabackup --backup --host=$MYSQL_HOST --user=$MYSQL_USER --password=$MYSQL_PASSWORD --target-dir=$NEXT_INC --incremental-basedir=$BASE_DIR --databases="$DATABASES"
 	fi
