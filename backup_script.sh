@@ -56,12 +56,16 @@ while true; do
 
     CURRENT_TIME=$(date +%s)
 
-    # Check if it's time to archive
-    if [ -f "${BASE_DIR}/last_archive_timestamp" ]; then
-        LAST_ARCHIVE_TIME=$(cat "${BASE_DIR}/last_archive_timestamp")
-    else
-        LAST_ARCHIVE_TIME=0
-    fi
+	# Ensure BASE_DIR exists
+	mkdir -p "$BASE_DIR"
+
+	# Ensure last_archive_timestamp file exists
+	if [ ! -f "${BASE_DIR}/last_archive_timestamp" ]; then
+		echo $CURRENT_TIME > "${BASE_DIR}/last_archive_timestamp"
+	fi
+
+	# Now read the last archive time
+	LAST_ARCHIVE_TIME=$(cat "${BASE_DIR}/last_archive_timestamp")
 
     INCREMENT_COUNT=$(count_increments)
 
