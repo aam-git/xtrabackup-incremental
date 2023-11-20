@@ -37,7 +37,7 @@ while true; do
 
     # Function to count incremental backups
     count_increments() {
-        find "$INCREMENTAL_DIR" -mindepth 1 -type d | wc -l
+        find "$INCREMENTAL_DIR" -mindepth 1 -maxdepth 1 -type d -printf '.' | wc -c
     }
 
     # Function to get the base directory for the next incremental backup
